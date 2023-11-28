@@ -15,7 +15,7 @@ public:
 	bool CreateWindow(const std::string& title, int width, int height);
 
 private:
-	// pointer to SDL_Window/pointer to SDL_Renderer
+	// pointer to SDL_Window/pointer to SDL_Renderer / two pointers of 8 bytes 
 	SDL_Window* m_window = nullptr;
 	SDL_Renderer* m_renderer = nullptr;
 

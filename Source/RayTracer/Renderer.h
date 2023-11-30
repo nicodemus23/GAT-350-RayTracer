@@ -14,6 +14,11 @@ public:
 	void Shutdown();
 	bool CreateWindow(const std::string& title, int width, int height);
 
+	SDL_Renderer* GetSDLRenderer() const {
+		return m_renderer;
+	}
+
+	friend class Canvas;
 private:
 	// pointer to SDL_Window/pointer to SDL_Renderer / two pointers of 8 bytes 
 	SDL_Window* m_window = nullptr;

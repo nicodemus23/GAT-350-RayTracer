@@ -58,3 +58,4 @@ void Canvas::PresentCanvas(const Canvas& canvas)
 	// present renderer to screen
 	SDL_RenderPresent(m_renderer.GetSDLRenderer());
 }
+

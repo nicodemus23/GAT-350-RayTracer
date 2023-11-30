@@ -1,6 +1,5 @@
-﻿  Canvas.cpp
+﻿  Camera.cpp
   Main.cpp
-  Renderer.cpp
   Generating Code...
   RayTracer.vcxproj -> C:\Users\Nic\Documents\Neumont\4_Fall 2023\GAT350 - Graphics Programming\RayTracer\RayTracer\Bin\RayTracer.exe
   C:\Users\Nic\Documents\Neumont\4_Fall 2023\GAT350 - Graphics Programming\RayTracer\RayTracer\Source\ThirdParty\SDL2-devel-2.28.5-VC\SDL2-2.28.5\lib\x64\SDL2.dll

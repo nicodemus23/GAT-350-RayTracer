@@ -28,42 +28,50 @@ void Scene::Render(Canvas& canvas)
 
 			// cast ray into scene
 			// set color value from trace
-			Color::color3_t color = Trace(ray);
-
-			////// DEBUG ///////
-
-			/*color.r *= 255;
-			color.g *= 255;
-			color.b *= 255;*/
-
-			// debug vector and color
-			/*std::cout << "Pixel (" << x << ", " << y << "): Color ("
-				<< color.r << ", " << color.g << ", " << color.b << ")\n";*/
-
-				/*Color::color4_t drawColor(color, 255);
-				canvas.DrawPoint(pixel, drawColor);*/
-				// draw color to canvas point (pixel)
-
-
-			///////////////////
-
+			Color::color3_t color = Trace(ray, 0, 100, raycastHit);
 
 			canvas.DrawPoint(pixel, Color::color4_t(color, 1));
 		}
 	}
 
 }
-Color::color3_t Scene::Trace(const ray_t& ray)
+Color::color3_t Scene::Trace(const ray_t& ray, float minDistance, float maxDistance, raycastHit_t& raycastHit)
 {
+	bool rayHit = false;
+	float closestDistance = maxDistance;
+
+	// check if scene objects are hit by the ray
+	for (const auto& object : m_objects)
+	{
+		// when checking objects don't include objects farther than closest hit (starts at max distance)
+		if (object->Hit(ray, minDistance, closestDistance, raycastHit))
+		{
+			rayHit = true;
+			// set closest distance to the raycast hit distance (only hit objects closer than closest distance)
+			closestDistance = raycastHit.distance;
+		}
+	}
+
+	// if ray hit object, scatter (bounce) ray and check for next hit
+	if (rayHit)
+	{
+		ray_t scattered;
+		Color::color3_t color;
+
+		if (raycastHit.material->Scatter(ray, raycastHit, color, scattered))
+		{
+			return color;
+		}
+		else
+		{
+			return Color::color3_t{ 0, 0, 0 };
+		}
+	}
+
+	// if ray not hit, return scene sky color
 	glm::vec3 direction = glm::normalize(ray.direction);
-
-	// set scene sky color
 	float t = (direction.y + 1) * 0.5f; // direction.y (-1 <-> 1) => (0 <-> 1)
-
-	//Color::color3_t bottomColor = Color::color3_t(1.0f, 1.0f, 1.0f);
-	//Color::color3_t topColor = Color::color3_t(0.5f, 0.7f, 1.0f);
-
-	Color::color3_t color = MathUtils::lerp(m_bottomColor, m_topColor, t);// <lerp between bottom and top color using t>
+	Color::color3_t color = MathUtils::lerp(m_bottomColor, m_topColor, t);
 
 	return color;
 }

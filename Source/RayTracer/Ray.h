@@ -10,7 +10,7 @@ struct ray_t
 	// parameterized constructor that initializes a ray_t object with specific origin and direction vectors. The origin and direction parameters are references to glm::vec3 objects
 	ray_t(const glm::vec3& origin, const glm::vec3& direction) :
 		origin{ origin },
-		direction{direction}
+		direction{ direction }
 	{}
 
 	// member function calculates a point along the ray at a given distance from the origin. It does this by multiplying the ray's direction vector by the distance and then 
@@ -24,6 +24,21 @@ struct ray_t
 
 	// operator overload for a float that returns the 3D point. Another way to GetPoint()
 	glm::vec3 operator* (float distance) const { return origin + (direction * distance); }
+
+};
+
+struct raycastHit_t
+{
+	// distance along the ray direction, from the origin to the hit point
+	float distance = 0;
+
+	// world point of raycast hit
+	glm::vec3 point{ 0 };
+	// surface normal of raycast hit
+	glm::vec3 normal{ 0 };
+
+	// material attached to hit object
+	class Material* material{ nullptr };
 };
 
 

@@ -17,13 +17,12 @@ public:
     void Clear(const Color::color4_t& color);
     void DrawPoint(const glm::ivec2& point, const Color::color4_t& color);
 
-    void PresentCanvas(const class Canvas& canvas);
+   
     const glm::ivec2& GetSize() const { return m_size; }
 
     friend class Renderer;
 
 private:
-    const Renderer& m_renderer; // Store a reference to Renderer (for user in PresentCanvas)
 
     struct SDL_Texture* m_texture = nullptr; // forward dec and pointer to SDL_Texture
     std::vector<Color::rgba_t> m_buffer; // vector of rgba_t 

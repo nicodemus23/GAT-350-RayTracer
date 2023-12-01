@@ -3,9 +3,9 @@
 
 
 
-Canvas::Canvas(int width, int height, const Renderer& renderer) : m_renderer(renderer) // initialize renderer reference
+Canvas::Canvas(int width, int height, const Renderer& renderer)
 {
-	m_size = { glm::ivec2(width, height) };
+	m_size = (glm::ivec2(width, height));
 	m_texture = SDL_CreateTexture(renderer.m_renderer,
 		SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING,
 		width, height);
@@ -50,12 +50,5 @@ void Canvas::DrawPoint(const glm::ivec2& point, const Color::color4_t& color)
 	m_buffer[point.x + (point.y * m_size.x)] = rgba;
 }
 
-void Canvas::PresentCanvas(const Canvas& canvas)
-{
-	// copy canvas texture to renderer
-	SDL_RenderCopy(m_renderer.GetSDLRenderer(),
-		m_texture, NULL, NULL);
-	// present renderer to screen
-	SDL_RenderPresent(m_renderer.GetSDLRenderer());
-}
+
 

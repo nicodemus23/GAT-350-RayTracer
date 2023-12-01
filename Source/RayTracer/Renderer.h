@@ -3,8 +3,6 @@
 #include <string>
 
 
-
-
 class Renderer
 {
 public:
@@ -14,9 +12,7 @@ public:
 	void Shutdown();
 	bool CreateWindow(const std::string& title, int width, int height);
 
-	SDL_Renderer* GetSDLRenderer() const {
-		return m_renderer;
-	}
+	void PresentCanvas(const class Canvas& canvas);
 
 	friend class Canvas;
 private:

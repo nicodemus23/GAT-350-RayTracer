@@ -36,11 +36,17 @@ int main(int, char**)
 	float aspectRatio = canvas.GetSize().x / (float)canvas.GetSize().y;
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 0, 1 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, 70.0f, aspectRatio);
 
+	auto material = std::make_shared<Lambertian>(Color::color3_t{ 0, 0, 1 });
+
+	// create objects -> add to scene
+	float radius = 0.5f;
+
+	auto sphere = std::make_unique<Sphere>(glm::vec3{ 0, 0, 0 }, radius, material);
 	// create scene
 	Scene scene; // sky color could be set with the top and bottom color
 	scene.SetCamera(camera);
+	scene.AddObject(std::unique_ptr<Object>(static_cast<Object*>(sphere.release())));
 
-	
 	bool quit = false;
 	while (!quit)
 	{	// event loop
@@ -52,28 +58,23 @@ int main(int, char**)
 			quit = true;
 			break;
 		}
-		
+
 		canvas.Clear({ 0, 0, 0, 1 });						// random x				random y				random R			random G			random B		A
 		//for (int i = 0; i < 1000; i++) canvas.DrawPoint({Random::random(0, 399), Random::random(0,299)},{Random::random01(),Random::random01(), Random::random01(), 1});
 		scene.Render(canvas);
 
 		// create material 
-		auto material = std::make_shared<Lambertian>(Color::color3_t{ 0, 0, 1 });
-
-		// create objects -> add to scene
-		auto sphere = std::make_unique<Sphere>(glm::vec3{ 0 }, glm::vec3{0}, material);
-		scene.AddObject(std::unique_ptr<Object>(static_cast<Object*>(sphere.release())));
-		canvas.Update();
 
 		renderer.PresentCanvas(canvas);
+		canvas.Update();
 
-		
+
 	}
-	
+
 	renderer.Shutdown();
 
 	return 0;
-	
+
 
 
 }

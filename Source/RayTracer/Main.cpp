@@ -68,7 +68,7 @@ int main(int, char**)
 
 	// render scene
 	canvas.Clear({ 0, 0, 0, 1 });
-	scene.Render(canvas, 10);
+	scene.Render(canvas, 50);
 	canvas.Update();
 
 	bool quit = false;

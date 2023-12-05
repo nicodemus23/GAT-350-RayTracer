@@ -34,18 +34,42 @@ int main(int, char**)
 
 	// create camera
 	float aspectRatio = canvas.GetSize().x / (float)canvas.GetSize().y;
-	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 0, 1 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, 70.0f, aspectRatio);
+																	// position			// direction (target)    // up vector  // fov // aspect ratio
+	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 0, 1 }, glm::vec3{ 1, 0, 0 }, glm::vec3{ 0, 1, 0 }, 70.0f, aspectRatio);
 
-	auto material = std::make_shared<Lambertian>(Color::color3_t{ 0, 0, 1 });
+	Scene scene(20); // sky color could be set with the top and bottom color
+	scene.SetCamera(camera);
+
+	// create material
+	auto lambertian = std::make_shared<Lambertian>(Color::color3_t{ 1, 1, 1 });
+	auto metal = std::make_shared<Metal>(Color::color3_t{ 0.8f, 0.6f, 0.2f }, 0.3f);
+
 
 	// create objects -> add to scene
-	float radius = 0.5f;
+	for (int i = 0; i < 20; i++)
+	{	// add multiple spheres to the scene at random positions and radii
 
-	auto sphere = std::make_unique<Sphere>(glm::vec3{ 0, 0, 0 }, radius, material);
-	// create scene
-	Scene scene; // sky color could be set with the top and bottom color
-	scene.SetCamera(camera);
-	scene.AddObject(std::unique_ptr<Object>(static_cast<Object*>(sphere.release())));
+		float radius = Random::random(0.1f, 0.5f);
+		glm::vec3 position = Random::random(glm::vec3{ -1, -1, 0 }, glm::vec3{ 4, 1, -2 });
+		std::shared_ptr<Material> material = (std::rand() % 2 == 0) ? std::dynamic_pointer_cast<Material>(lambertian) : std::dynamic_pointer_cast<Material>(metal);
+
+		std::cout << "Sphere " << i << ": Radius = " << radius
+			<< ", Position = (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
+
+		auto sphere = std::make_unique<Sphere>(position, radius, material);
+
+		scene.AddObject(std::move(sphere));
+	}
+	//auto sphere = std::make_unique<Sphere>(glm::vec3{ -5, -4, -7 }, radius, material);
+		//scene.AddObject(std::move(sphere));
+	//scene.AddObject(std::move(sphere));
+
+
+
+	// render scene
+	canvas.Clear({ 0, 0, 0, 1 });
+	scene.Render(canvas, 10);
+	canvas.Update();
 
 	bool quit = false;
 	while (!quit)
@@ -59,22 +83,12 @@ int main(int, char**)
 			break;
 		}
 
-		canvas.Clear({ 0, 0, 0, 1 });						// random x				random y				random R			random G			random B		A
-		//for (int i = 0; i < 1000; i++) canvas.DrawPoint({Random::random(0, 399), Random::random(0,299)},{Random::random01(),Random::random01(), Random::random01(), 1});
-		scene.Render(canvas);
-
-		// create material 
 
 		renderer.PresentCanvas(canvas);
-		canvas.Update();
-
-
 	}
 
 	renderer.Shutdown();
 
 	return 0;
-
-
 
 }

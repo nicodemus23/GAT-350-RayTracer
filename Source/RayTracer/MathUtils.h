@@ -27,6 +27,11 @@ public:
 
 	}
 
+	inline glm::vec3 reflect(const glm::vec3& v, const glm::vec3& n)
+	{
+		return (v - (n * dot(n, v)) * glm::vec3{ 2 });
+	}
+
 	// a = start of the interpolation
 	// b = end value for interpolation
 	// float t = interpolation factor

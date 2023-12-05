@@ -40,7 +40,7 @@ public:
 	}
 
 
-	inline glm::vec3 randomInUnitSphere()
+	static inline glm::vec3 randomInUnitSphere()
 	{
 		glm::vec3 v;
 		// generate random vectors between -1 <-> +1, return vector if length is less than 1

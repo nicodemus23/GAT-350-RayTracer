@@ -13,6 +13,11 @@ struct ray_t
 		direction{ direction }
 	{}
 
+
+	glm::vec3 At(float t) const {
+		return origin + t * direction;
+	}
+
 	// member function calculates a point along the ray at a given distance from the origin. It does this by multiplying the ray's direction vector by the distance and then 
 	// adding this to the ray's origin. 
 	glm::vec3 GetPoint(float distance) const { return origin + (direction * distance); }

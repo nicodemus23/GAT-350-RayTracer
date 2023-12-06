@@ -9,6 +9,7 @@
 #include <memory>
 #include "Sphere.h"
 #include "Object.h"
+#include "Plane.h"
 
 
 
@@ -44,13 +45,20 @@ int main(int, char**)
 	auto lambertian = std::make_shared<Lambertian>(Color::color3_t{ 1, 1, 1 });
 	auto metal = std::make_shared<Metal>(Color::color3_t{ 0.8f, 0.6f, 0.2f }, 0.3f);
 
+	auto planeMaterial = std::make_shared<Lambertian>(Color::color3_t{ 0.82f, 0.82f, 0.86f });
+	glm::vec3 planePosition = glm::vec3{ 0, 1, 0 };
+	std::cout << "Plane:" "Position = (" << planePosition.x << ", " << planePosition.y << ", " << planePosition.z << ")" << std::endl;
+	auto plane = std::make_unique<Plane>(glm::vec3{ 0, 1, 0 }, glm::vec3{ 0, 1, 0 }, planeMaterial);
+
+
+	scene.AddObject(std::move(plane));
 
 	// create objects -> add to scene
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 10; ++i)
 	{	// add multiple spheres to the scene at random positions and radii
 
 		float radius = Random::random(0.1f, 0.5f);
-		glm::vec3 position = Random::random(glm::vec3{ -1, -1, 0 }, glm::vec3{ 4, 1, -2 });
+		glm::vec3 position = Random::random(glm::vec3{ -1, -2, 0 }, glm::vec3{ 4, 1, -2 });
 		std::shared_ptr<Material> material = (std::rand() % 2 == 0) ? std::dynamic_pointer_cast<Material>(lambertian) : std::dynamic_pointer_cast<Material>(metal);
 
 		std::cout << "Sphere " << i << ": Radius = " << radius
@@ -68,7 +76,7 @@ int main(int, char**)
 
 	// render scene
 	canvas.Clear({ 0, 0, 0, 1 });
-	scene.Render(canvas, 50);
+	scene.Render(canvas, 200);
 	canvas.Update();
 
 	bool quit = false;

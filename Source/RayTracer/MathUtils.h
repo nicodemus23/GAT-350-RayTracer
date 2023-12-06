@@ -1,5 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <cmath>  // for std::fabs
+#include <cfloat> // for FLT_EPSILON
 
 
 class MathUtils
@@ -31,6 +33,14 @@ public:
 	{
 		return (v - (n * dot(n, v)) * glm::vec3{ 2 });
 	}
+
+	static inline bool approximately(float value1, float value2)
+	{
+		// check if the difference between the values is less than epsilon
+		 //(get floating - point absolute value(subtract value 1 from value 2) 
+		return	(std::fabs(value1 - value2) < FLT_EPSILON);
+	}
+
 
 	// a = start of the interpolation
 	// b = end value for interpolation

@@ -11,6 +11,7 @@
 #include "Object.h"
 #include "Plane.h"
 #include "Triangle.h"
+#include "Mesh.h"
 
 
 
@@ -37,49 +38,108 @@ int main(int, char**)
 	// create camera
 	float aspectRatio = canvas.GetSize().x / (float)canvas.GetSize().y;
 																	// position			// direction (target)    // up vector  // fov // aspect ratio
-	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 1, 0, 0 }, glm::vec3{ 0, 0.5f, 0.5f }, glm::vec3{ 0, 1, 0 }, 70.0f, aspectRatio);
+	//std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 1, 0, 0 }, glm::vec3{ 0, 0.5f, 0.5f }, glm::vec3{ 0, 1, 0 }, 70.0f, aspectRatio);
+	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 2, 3, 5}, glm::vec3{1, 0, 0 }, glm::vec3{ 0, 1, 0 }, 30.0f, aspectRatio);
+
+	//std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 1, 10 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, 20.0f, aspectRatio);
+
 	// create scene
-	Scene scene(20); // sky color could be set with the top and bottom color
+	Scene scene(8, glm::vec3{ 1.0f }, glm::vec3{ 0.5f, 0.7f, 1.0f }); // sky color could be set with the top and bottom color
 	scene.SetCamera(camera);
 
 	// create material
 	auto lambertian = std::make_shared<Lambertian>(Color::color3_t{ 1, 1, 1 });
 	auto metal = std::make_shared<Metal>(Color::color3_t{ 0.8f, 0.6f, 0.2f }, 0.3f);
 
-	auto planeMaterial = std::make_shared<Lambertian>(Color::color3_t{ 0.82f, 0.82f, 0.86f });
+	auto planeMaterial = std::make_shared<Lambertian>(Color::color3_t{ 0.86, 0.86, 0.86f });
 	//glm::vec3 trianglePosition = glm::vec3{ 0, 1, 0 };
-	//std::cout << "Triangle:" "Position = (" << trianglePosition.x << ", " << trianglePosition.y << ", " << trianglePosition.z << ")" << std::endl;
-	//auto plane = std::make_unique<Plane>(glm::vec3{ 0, 1, 0 }, glm::vec3{ 0, 1, 0 }, planeMaterial);
+	                                       // normal			// position			// material
+	auto plane = std::make_unique<Plane>(glm::vec3{ 0, 1, 0 }, glm::vec3{ 0, 0, 0 }, planeMaterial);
+	scene.AddObject(std::move(plane));
 
-	auto triangleMaterial = std::make_shared<Metal>(Color::color3_t{ 1.0f, 0.0f, 0.0f }, 0.3f);
+	auto mesh = std::make_unique<Mesh>(std::make_shared<Lambertian>(Color::color3_t{ 0, 0, 1 }));
+	glm::vec3 intendedPosition = glm::vec3{ 0, 0.5f, 0 };
+
+	if (mesh->Load("Models/cube-1.obj", glm::vec3{ 0, 0.5f, 0 }, glm::vec3{ 0, 45, 0 }))
+	{
+		std::cout << "Cube loaded successfully." << std::endl;
+
+		// Get actual position from the mesh
+		glm::vec3 actualPosition = mesh->GetPosition();
+		std::cout << "Intended cube position: (" << intendedPosition.x << ", " << intendedPosition.y << ", " << intendedPosition.z << ")" << std::endl;
+		std::cout << "Actual cube position: (" << actualPosition.x << ", " << actualPosition.y << ", " << actualPosition.z << ")" << std::endl;
+	} 
+	else 
+	{
+		std::cout << "Failed to load the cube." << std::endl;
+	}
+	scene.AddObject(std::move(mesh));
+
+	/*auto triangleMaterial = std::make_shared<Metal>(Color::color3_t{ 1.0f, 0.0f, 0.0f }, 0.3f);
 	std::cout << "Triangle created with vertices: "
 		<< "V1(" << 0 << ", " << 2 << ", " << 0 << "), "
 		<< "V2(" << 0 << ", " << 1 << ", " << 0 << "), "
-		<< "V3(" << 0 << ", " << 3 << ", " << 0 << ")" << std::endl;
+		<< "V3(" << 0 << ", " << 3 << ", " << 0 << ")" << std::endl;*/
 
 	//											// v1				// v2				// v3				// material
-	auto triangle = std::make_unique<Triangle>(glm::vec3{ 0.1f, 0, 0 }, glm::vec3{ 0, 1.0f, 0.7f }, glm::vec3{ 0.0f, 0, 0.9f }, triangleMaterial);
+	//auto triangle = std::make_unique<Triangle>(glm::vec3{ 0.1f, 0, 0 }, glm::vec3{ 0, 1.0f, 0.7f }, glm::vec3{ 0.0f, 0, 0.9f }, triangleMaterial);
 	// auto triangle = std::make_unique<Triangle>(glm::vec3{ -1, 0, -2 }, glm::vec3{ 1.5, 0, -2 }, glm::vec3{ 0.3, 2, -2 }, std::make_shared<Lambertian>(color3_t{ 1, 0, 0 }));
 
 
 
-	scene.AddObject(std::move(triangle));
-
 	// create objects -> add to scene
-	for (int i = 0; i < 10; ++i)
-	{	// add multiple spheres to the scene at random positions and radii
+	/*int sphereGrid = 5;
+	float gridSpacing = 1.1f;*/
 
-		float radius = Random::random(0.1f, 0.5f);
-		glm::vec3 position = Random::random(glm::vec3{ -1, -2, 0 }, glm::vec3{ 4, 1, -2 });
-		std::shared_ptr<Material> material = (std::rand() % 2 == 0) ? std::dynamic_pointer_cast<Material>(lambertian) : std::dynamic_pointer_cast<Material>(metal);
+	//for (int x = -sphereGrid; x <= sphereGrid; x++)
+	//{			std::shared_ptr<Material> material;
 
-		std::cout << "Sphere " << i << ": Radius = " << radius
-			<< ", Position = (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
+	//
+	//		for (int z = -sphereGrid; z <= sphereGrid; z++)
+	//		{
+	//			// create random material
+	//			float r = Random::random01();
+	//			if (r < 0.3f)		material = std::make_shared<Lambertian>(glm::rgbColor(glm::vec3{ Random::random(0, 360), 1.0f, 1.0f }));
+	//			else if (r < 0.6f)	material = std::make_shared<Metal>(Color::color3_t{ Random::random(0.5f, 1.0f) }, Random::random(0, 0.5f));
+	//			else if (r < 0.9f)	material = std::make_shared<Dielectric>(Color::color3_t{ 1.0f }, Random::random(1.1f, 2));
+	//			else				material = std::make_shared<Emissive>(glm::rgbColor(glm::vec3{ Random::random(0, 360), 1.0f, 1.0f }), 5.0f);
 
-		//auto sphere = std::make_unique<Sphere>(position, radius, material);
+	//			// set random sphere radius
+	//			float radius = Random::random(0.3f, 0.5f);
 
-		//scene.AddObject(std::move(sphere));
-	}
+	//			// create sphere using random radius and material
+	//			auto sphere = std::make_unique<Sphere>(glm::vec3{ x * gridSpacing, radius, z * gridSpacing }, radius, material);
+	//			// add sphere to the scene
+	//			scene.AddObject(std::move(sphere));
+	//		}
+	//	
+	//
+	//}
+	//for (int z = -10; z < 10; z++)
+	//{
+
+	//	std::shared_ptr<Material> material;
+
+	//	// create random material
+	//	float r = Random::random01();
+	//	if (r < 0.3f)		material = std::make_shared<Lambertian>(glm::rgbColor(glm::vec3{ Random::random(0, 360), 1.0f, 1.0f }));
+	//	else if (r < 0.6f)	material = std::make_shared<Metal>(Color::color3_t{ Random::random(0.5f, 1.0f) }, Random::random(0, 0.5f));
+	//	else if (r < 0.9f)	material = std::make_shared<Dielectric>(Color::color3_t{ 1.0f }, Random::random(1.1f, 2));
+	//	else				material = std::make_shared<Emissive>(glm::rgbColor(glm::vec3{ Random::random(0, 360), 1.0f, 1.0f }), 5.0f);
+
+	//	// set random sphere radius
+	//	float radius = Random::random(0.4f, 0.6f);
+
+	//	auto sphereX = Random::random(-1.0f, 1.0f); // smaller range for x
+	//	auto sphereY = radius; // keep it at the radius height
+	//	auto sphereZ = z + Random::random(-0.5f, 0.5f); // smaller range for z
+	//	auto sphere = std::make_unique<Sphere>(glm::vec3{ sphereX, sphereY, sphereZ }, radius, material);
+
+	//	// create sphere using random radius and material
+	//	//auto sphere = std::make_unique<Sphere>(glm::vec3{ x + Random::random(-0.5f, 0.8f), radius, z + Random::random(-0.5f, 0.8f) }, radius, material);
+	//	// add sphere to the scene
+	//	scene.AddObject(std::move(sphere));
+	//}
 	//auto sphere = std::make_unique<Sphere>(glm::vec3{ -5, -4, -7 }, radius, material);
 		//scene.AddObject(std::move(sphere));
 	//scene.AddObject(std::move(sphere));

@@ -23,7 +23,7 @@ public:
 
 	}
 
-	inline float dot(const glm::vec3& v1, const glm::vec3& v2)
+	static inline float dot(const glm::vec3& v1, const glm::vec3& v2)
 	{
 		return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 
@@ -41,7 +41,7 @@ public:
 		return	(std::fabs(value1 - value2) < FLT_EPSILON);
 	}
 
-	inline bool refract(const glm::vec3& v, const glm::vec3& n, float index, glm::vec3& refracted)
+	static inline bool refract(const glm::vec3& v, const glm::vec3& n, float index, glm::vec3& refracted)
 	{
 		// normalize the incoming vector (v)
 		glm::vec3 nv = glm::normalize(v);
@@ -55,6 +55,14 @@ public:
 		}
 
 		return false;
+	}
+
+	static inline float schlick(float cosine, float index)
+	{
+		// calculate specular reflection coefficient, or probability of reflection
+		float r0 = (1.0f - index) / (1 + index);
+		r0 = r0 * r0;
+		return r0 + (1.0f - r0) * (float)std::pow((1.0f - cosine), 5);
 	}
 
 

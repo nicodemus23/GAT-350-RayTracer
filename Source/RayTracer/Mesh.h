@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <unordered_map>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -24,6 +25,13 @@ public:
 	{
 	}
 
+	struct ObjectInfo {
+		glm::vec3 position;
+		std::string name;
+	};
+
+	std::vector<ObjectInfo> objectsInfo;
+
 	bool Hit(const ray_t& ray, float minDistance, float maxDistance, raycastHit_t& raycastHit) override;
 	bool Load(const std::string& filename, const glm::vec3& translate = glm::vec3(0), const glm::vec3& rotation = glm::vec3(0), const glm::vec3& scale = glm::vec3(1));
 	
@@ -33,7 +41,7 @@ public:
 private:
 	void ProcessNode(aiNode* node, const aiScene* scene, const glm::mat4& transform);
 	void ProcessMesh(aiMesh* mesh, const aiScene* scene, const glm::mat4& transform);
-
+	void OutputObjectsInfo();
 private:
 	std::vector<glm::vec3> m_vertices;
 	glm::vec3 m_position;

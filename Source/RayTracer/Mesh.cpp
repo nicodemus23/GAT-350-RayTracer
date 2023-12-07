@@ -6,7 +6,7 @@ bool Mesh::Hit(const ray_t& ray, float minDistance, float maxDistance, raycastHi
 	// check cast ray with mesh triangles 
 	for (size_t i = 0; i < m_vertices.size(); i += 3 ) //while less than number of vertices and increment by 3 each iteration>
 	{
-		if (i + 2 >= m_vertices.size()) // if i + 2 is greater than or equal to the number of vertices, break out of loop>
+		//if (i + 2 >= m_vertices.size()) // if i + 2 is greater than or equal to the number of vertices, break out of loop>
 		{
 			Triangle triangle(m_vertices[i], m_vertices[i + 1], m_vertices[i + 2], m_material); // < set the three vertices for the triangle and the material>
 			if (triangle.Hit(ray, minDistance, maxDistance, raycastHit))
@@ -85,4 +85,8 @@ void Mesh::ProcessMesh(aiMesh* mesh, const aiScene* scene, const glm::mat4& tran
 			m_vertices.push_back(positions[index]);
 		}
 	}
+
+	
 }
+
+

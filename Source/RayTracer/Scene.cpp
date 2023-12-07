@@ -6,11 +6,14 @@
 #include "Ray.h"
 #include "Random.h"
 #include <iostream>
+#include <iomanip>
 
 void Scene::Render(Canvas& canvas, int numSamples)
 {
 	// Iterate over each pixel of the canvas
 	for (int y = 0; y < canvas.GetSize().y; y++) {
+		std::cout << std::setprecision(2) << std::setw(5) << ((y / (float)canvas.GetSize().y) * 100) << "%\n";
+
 		for (int x = 0; x < canvas.GetSize().x; x++) {
 			// create vec2 pixel from canvas x,y
 			glm::vec2 pixel = glm::vec2{ x, y };
@@ -70,18 +73,21 @@ Color::color3_t Scene::Trace(const ray_t& ray, float minDistance, float maxDista
 	{
 		ray_t scattered;
 		Color::color3_t color;
+		Color::color3_t emissive = raycastHit.material->GetEmissive();
 
 		// check if maximum depth (number of bounces) is reached, get color from material and scattered ray
 		if (depth > 0 && raycastHit.material->Scatter(ray, raycastHit, color, scattered))
 		{	// recursive function, call self and modulate (multiply) colors of depth bounces
-			return color * Trace(scattered, minDistance, maxDistance, raycastHit, depth -1);
+			return emissive + color * Trace(scattered, minDistance, maxDistance, raycastHit, depth -1);
 		}
 		else
 		{	// reached maximum depth of bounces (color is black)
 			//return Color::color3_t{ 0, 0, 0 };
 			
 			// reached maximum depth of bounces (get emissive color, will be black except for Emissive materials)
-			return raycastHit.material->GetEmissive();
+
+			//return raycastHit.material->GetEmissive();
+			return emissive;
 		}
 	}
 

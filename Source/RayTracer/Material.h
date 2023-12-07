@@ -51,7 +51,7 @@ protected:
 class Emissive : public Material
 {
 public:
-	Emissive(const Color::color3_t& albedo, float intensity = 2) : m_albedo{ albedo }, m_intensity{intensity} {}
+	Emissive(const Color::color3_t& albedo, float intensity = 10) : m_albedo{ albedo }, m_intensity{intensity} {}
 
 	bool Scatter(const ray_t& ray, const raycastHit_t& raycastHit, Color::color3_t& color, ray_t& scattered) const override { return false; }
 	Color::color3_t GetEmissive() const override { return m_albedo * m_intensity; }

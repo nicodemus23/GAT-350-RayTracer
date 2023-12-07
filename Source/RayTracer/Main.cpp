@@ -38,42 +38,48 @@ int main(int, char**)
 	// create camera
 	float aspectRatio = canvas.GetSize().x / (float)canvas.GetSize().y;
 																	// position			// direction (target)    // up vector  // fov // aspect ratio
-	//std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 1, 0, 0 }, glm::vec3{ 0, 0.5f, 0.5f }, glm::vec3{ 0, 1, 0 }, 70.0f, aspectRatio);
-	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 2, 3, 5}, glm::vec3{1, 0, 0 }, glm::vec3{ 0, 1, 0 }, 30.0f, aspectRatio);
+	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 2, 3 }, glm::vec3{ 0, 1, 0 }, glm::vec3{ 0, 1, 0 }, 70.0f, aspectRatio);
+	//std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 2, 3, 5}, glm::vec3{1, 0, 0 }, glm::vec3{ 0, 1, 0 }, 30.0f, aspectRatio);
 
 	//std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 1, 10 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, 20.0f, aspectRatio);
 
-	// create scene
-	Scene scene(8, glm::vec3{ 1.0f }, glm::vec3{ 0.5f, 0.7f, 1.0f }); // sky color could be set with the top and bottom color
+	// create scene // sky color // ground color
+	Scene scene(8, glm::vec3{ 0.1f }, glm::vec3{ 0.0f, 0.0f, 0.0f }); // sky color could be set with the top and bottom color
 	scene.SetCamera(camera);
 
 	// create material
 	auto lambertian = std::make_shared<Lambertian>(Color::color3_t{ 1, 1, 1 });
 	auto metal = std::make_shared<Metal>(Color::color3_t{ 0.8f, 0.6f, 0.2f }, 0.3f);
+	auto emissiveMaterial = std::make_shared<Emissive>(Color::color3_t{ 0.8f, 0.6f, 0.2f }, 0.3f);
 
-	auto planeMaterial = std::make_shared<Lambertian>(Color::color3_t{ 0.86, 0.86, 0.86f });
+	auto planeMaterial = std::make_shared<Lambertian>(Color::color3_t{ 0.2, 0.2, 0.2f });
 	//glm::vec3 trianglePosition = glm::vec3{ 0, 1, 0 };
 	                                       // normal			// position			// material
-	auto plane = std::make_unique<Plane>(glm::vec3{ 0, 1, 0 }, glm::vec3{ 0, 0, 0 }, planeMaterial);
+	auto plane = std::make_unique<Plane>(glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 2, 0 }, planeMaterial);
 	scene.AddObject(std::move(plane));
 
-	auto mesh = std::make_unique<Mesh>(std::make_shared<Lambertian>(Color::color3_t{ 0, 0, 1 }));
-	glm::vec3 intendedPosition = glm::vec3{ 0, 0.5f, 0 };
+	auto mesh = std::make_unique<Mesh>(std::make_shared<Emissive>(Color::color3_t{ 0.8f, 0.7f, 0.8f }));
+	//glm::vec3 intendedPosition = glm::vec3{ 0, 0.5f, 0 };
 
-	if (mesh->Load("Models/cube-1.obj", glm::vec3{ 0, 0.5f, 0 }, glm::vec3{ 0, 45, 0 }))
-	{
-		std::cout << "Cube loaded successfully." << std::endl;
+	mesh->Load("Models/cube-1.obj", glm::vec3{ 0, 0.5f, 0 }, glm::vec3{ 0, 45, 0 });
+	//{
+	//
+	//	
+	//	std::cout << "Cube loaded successfully." << std::endl;
 
-		// Get actual position from the mesh
-		glm::vec3 actualPosition = mesh->GetPosition();
-		std::cout << "Intended cube position: (" << intendedPosition.x << ", " << intendedPosition.y << ", " << intendedPosition.z << ")" << std::endl;
-		std::cout << "Actual cube position: (" << actualPosition.x << ", " << actualPosition.y << ", " << actualPosition.z << ")" << std::endl;
-	} 
-	else 
+	//	// Get actual position from the mesh
+	//	glm::vec3 actualPosition = mesh->GetPosition();
+	//	//std::cout << "Intended cube position: (" << intendedPosition.x << ", " << intendedPosition.y << ", " << intendedPosition.z << ")" << std::endl;
+	//	std::cout << "Cube position: (" << actualPosition.x << ", " << actualPosition.y << ", " << actualPosition.z << ")" << std::endl;
+
+	//	scene.AddObject(std::move(mesh));
+	//} 
+	/*else 
 	{
 		std::cout << "Failed to load the cube." << std::endl;
-	}
+	}*/
 	scene.AddObject(std::move(mesh));
+
 
 	/*auto triangleMaterial = std::make_shared<Metal>(Color::color3_t{ 1.0f, 0.0f, 0.0f }, 0.3f);
 	std::cout << "Triangle created with vertices: "
@@ -148,7 +154,7 @@ int main(int, char**)
 
 	// render scene
 	canvas.Clear({ 0, 0, 0, 20 });
-	scene.Render(canvas, 10);
+	scene.Render(canvas, 300);
 	canvas.Update();
 
 	bool quit = false;

@@ -8,7 +8,7 @@
 #include <iostream>
 #include <iomanip>
 
-void Scene::Render(Canvas& canvas, int numSamples)
+void Scene::Render(Canvas& canvas, int numSamples, int depth)
 {
 	// Iterate over each pixel of the canvas
 	for (int y = 0; y < canvas.GetSize().y; y++) {
@@ -39,7 +39,7 @@ void Scene::Render(Canvas& canvas, int numSamples)
 				// cast ray into scene
 				raycastHit_t raycastHit;
 				// set color value from trace
-				color += Trace(ray, 0, 100, raycastHit, m_depth);
+				color += Trace(ray, 0, 100, raycastHit, depth);
 			}
 			// get average color (average = (color + color + color) / number of samples)
 			color /= numSamples;

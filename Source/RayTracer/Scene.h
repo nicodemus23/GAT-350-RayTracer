@@ -30,7 +30,7 @@ public:
 private:
 	std::shared_ptr<Camera> m_camera;
 
-	Color::color3_t m_topColor{ 1 };
+	Color::color3_t m_topColor{ 0.8, 0.8, 0.8 };
 	Color::color3_t m_bottomColor{ 0 };
 
 	std::vector<std::unique_ptr<Object>> m_objects;

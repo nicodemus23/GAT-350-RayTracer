@@ -26,8 +26,8 @@ int main(int, char**)
 
 	const int width = 400;
 	const int height = 300;
-	const int samples = 1;
-	const int depth = 5;
+	const int samples = 1000;
+	const int depth = 3;
 
 	// renderer instance
 	Renderer renderer;
@@ -278,15 +278,15 @@ void InitScene04(Scene& scene, const Canvas& canvas)
 	// create camera
 	float aspectRatio = canvas.GetSize().x / (float)canvas.GetSize().y;
 	// position			// direction (target)    // up vector  // fov // aspect ratio
-	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 1.5f, 7 }, glm::vec3{ 0, -2.5f, 0 }, glm::vec3{ 0, 1, 0 }, 20.0f, aspectRatio);
+	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 0.0f, 6 }, glm::vec3{ 0, -2.0f, 0 }, glm::vec3{ 0, 1, 0 }, 20.0f, aspectRatio);
 
 	// create scene // sky color // ground color
 	scene.SetCamera(camera);
 
 	// create material										// color				// intensity
 	auto dielectric = std::make_shared<Dielectric>(Color::color3_t{ 1.0f }, 1.5f);
-	auto dielectricR = std::make_shared<Dielectric>(Color::color3_t{ 0.639f, 0.542f, 0.536f }, 1.5f);
-	auto dielectricG = std::make_shared<Dielectric>(Color::color3_t{ 0.564f, 0.594f, 0.524f }, 1.5f);
+	auto dielectricR = std::make_shared<Dielectric>(Color::color3_t{ 0.9f, 0.542f, 0.536f }, 1.5f);
+	auto dielectricG = std::make_shared<Dielectric>(Color::color3_t{ 0.564f, 0.8f, 0.524f }, 1.5f);
 	auto lambertian = std::make_shared<Lambertian>(Color::color3_t{ 1, 1, 1 });
 	auto metal = std::make_shared<Metal>(Color::color3_t{ 0.8f, 0.6f, 0.2f }, 0.3f);
 	// color				// intensity
@@ -312,16 +312,16 @@ void InitScene04(Scene& scene, const Canvas& canvas)
 	auto backPlane = std::make_unique<Mesh>(std::make_shared<Lambertian>(Color::color3_t{ 1.0f, 1.0f, 1.0f }));
 	auto topPlane = std::make_unique<Mesh>(std::make_shared<Lambertian>(Color::color3_t{ 1.0f, 1.0f, 1.0f }));
 	auto floorPlane = std::make_unique<Mesh>(std::make_shared<Lambertian>(Color::color3_t{ 1.0f, 1.0f, 1.0f }));
-	auto redPlane = std::make_unique<Mesh>(std::make_shared<Lambertian>(Color::color3_t{ 1.0f, 0.0f, 0.0f }));
-	auto greenPlane = std::make_unique<Mesh>(std::make_shared<Lambertian>(Color::color3_t{ 0.0f, 1.0f, 0.0f }));
-
+	auto redPlane = std::make_unique<Mesh>(std::make_shared<Lambertian>(Color::color3_t{ 1.0f, 1.0f, 1.0f }));
+	auto greenPlane = std::make_unique<Mesh>(std::make_shared<Lambertian>(Color::color3_t{ 1.0f, 1.0f, 1.0f }));
+																				// color				// intensity
 	auto lightPlane = std::make_unique<Mesh>(std::make_shared<Emissive>(Color::color3_t{ 0.95f, 0.95f, 0.95f }, 18.0f));
 
 	cube->Load("Models/cube-1.obj", glm::vec3{ -0.65f, -1.2f, 1.0f }, glm::vec3{ 0, 55, 0 }, glm::vec3{ 0.75f, 0.75f , 0.75f });
 													
-	diamond->Load("Models/diamond_1.obj", glm::vec3{ -0.65f, -1.2f, 1.1f }, glm::vec3{ 0, 55, 0 }, glm::vec3{ 0.75f, 0.75f , 0.75f });
+	diamond->Load("Models/diamond_1.obj", glm::vec3{ 0.0f, -1.4f, 2.0f }, glm::vec3{ -52, 65, 0 }, glm::vec3{ 0.75f, 0.75f , 0.75f });
 	diamondR->Load("Models/diamond_1.obj", glm::vec3{ 0.65f, -1.2f, 1.2f }, glm::vec3{ 0, 25, 0 }, glm::vec3{ 0.75f, 0.75f , 0.75f });
-	diamondG->Load("Models/diamond_1.obj", glm::vec3{ 0.25f, -1.2f, 2.5f }, glm::vec3{ 0, 75, 0 }, glm::vec3{ 0.75f, 0.75f , 0.75f });
+	diamondG->Load("Models/diamond_1.obj", glm::vec3{ 0.25f, -1.2f, 2.5f }, glm::vec3{ 0, 75, 35 }, glm::vec3{ 0.75f, 0.75f , 0.75f });
 	//sphere->Load("Models/sphere.obj", glm::vec3{ 0.5f, -1.0f, 1.5f }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0.5f, 0.5f , 0.5f });
 
 	// create sphere using random radius and material
@@ -330,25 +330,25 @@ void InitScene04(Scene& scene, const Canvas& canvas)
 	//	// add sphere to the scene
 	//	scene.AddObject(std::move(sphere));
 
-	//backPlane->Load("Models/quad-1.obj", glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 3, 3, 1 });
-	//topPlane->Load("Models/quad-1.obj", glm::vec3{ 0, 1.5f, 1.5f }, glm::vec3{ 90, 0, 0 }, glm::vec3{ 3, 3, 1 });
+	backPlane->Load("Models/quad-1.obj", glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 3, 3, 1 });
+	topPlane->Load("Models/quad-1.obj", glm::vec3{ 0, 1.5f, 1.5f }, glm::vec3{ 90, 0, 0 }, glm::vec3{ 3, 3, 1 });
 	floorPlane->Load("Models/quad-1.obj", glm::vec3{ 0, -1.5f, 1.5f }, glm::vec3{ -90, 0, 0 }, glm::vec3{ 20, 20, 1 });
-	//redPlane->Load("Models/quad-1.obj", glm::vec3{ -1.5f, 0, 1.5f }, glm::vec3{ 0, 90, 0 }, glm::vec3{ 3, 3, 1 });
-	//greenPlane->Load("Models/quad-1.obj", glm::vec3{ 1.5f, 0, 1.5f }, glm::vec3{ 0, -90, 0 }, glm::vec3{ 3, 3, 1 });
+	redPlane->Load("Models/quad-1.obj", glm::vec3{ -1.5f, 0, 1.5f }, glm::vec3{ 0, 90, 0 }, glm::vec3{ 3, 3, 1 });
+	greenPlane->Load("Models/quad-1.obj", glm::vec3{ 1.5f, 0, 1.5f }, glm::vec3{ 0, -90, 0 }, glm::vec3{ 3, 3, 1 });
 
-	lightPlane->Load("Models/quad-1.obj", glm::vec3{ 0, 1.49f, 1.5f }, glm::vec3{ 90, 0, 0 }, glm::vec3{ 0.75f, 0.75f, 1 });
+	lightPlane->Load("Models/quad-1.obj", glm::vec3{ 0, 1.49f, 1.0f }, glm::vec3{ 90, 0, 0 }, glm::vec3{ 1.0f, 0.75f, 1 });
 
 	// add meshes to the scene
 	// planes 
-	//scene.AddObject(std::move(backPlane));
-	//scene.AddObject(std::move(topPlane));
+	scene.AddObject(std::move(backPlane));
+	scene.AddObject(std::move(topPlane));
 	scene.AddObject(std::move(floorPlane));
 	scene.AddObject(std::move(diamond));
-	scene.AddObject(std::move(diamondR));
-	scene.AddObject(std::move(diamondG));
+	//scene.AddObject(std::move(diamondR));
+	//scene.AddObject(std::move(diamondG));
 
-	//scene.AddObject(std::move(redPlane));
-	//scene.AddObject(std::move(greenPlane));
+	scene.AddObject(std::move(redPlane));
+	scene.AddObject(std::move(greenPlane));
 
 	//scene.AddObject(std::move(cube));
 	//scene.AddObject(std::move(sphere));
